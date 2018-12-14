@@ -1,0 +1,49 @@
+Organizations:
+    - &OrdererWorknet
+        Name: Orderer
+        ID: OrdererMSP
+        MSPDir: crypto-config/ordererOrganizations/orderer/msp/
+ 
+    - &Worknet
+        Name: WorknetMSP
+        ID: WorknetMSP
+        MSPDir: crypto-config/peerOrganizations/worknet/msp/
+        AnchorPeers:
+            - Host: 127.0.0.1
+              Port: 7051
+
+Orderer: &OrdererDefaults
+    OrdererType: kafka
+    Addresses:
+        - orderer:7050
+    BatchTimeout: 1s
+    BatchSize:
+        MaxMessageCount: 30
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    Kafka:
+        Brokers:
+            - kafka-zookeeper:9092
+    Organizations:
+
+Application: &ApplicationDefaults
+    Organizations:
+
+Profiles:
+
+    WorknetOrdererGenesis:
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererWorknet
+        Consortiums:
+            WorknetConsortium:
+                Organizations:
+                    - *Worknet
+
+    WorknetChannel:
+        Consortium: WorknetConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Worknet

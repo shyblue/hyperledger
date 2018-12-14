@@ -1,0 +1,13 @@
+OrdererOrgs:
+        - Name: WorknetOrderer
+          Domain: orderer
+          Specs:
+                  - Hostname: orderer
+
+PeerOrgs:
+        - Name: Worknet
+          Domain: worknet
+          Template:
+                  Count: 1
+          Users:
+                  Count: 1
